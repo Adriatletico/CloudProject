@@ -39,15 +39,17 @@ Este proyecto resuelve el problema utilizando **procesamiento distribuido** con 
 
 ## 3. Descripción de los Datos <a name="descripcion-de-los-datos"></a>
 
-- **Origen**: Datos de transacciones en cadena de bloques.
+- **Origen**: Datos de transacciones en cadena de bloques. Los datos utilizados provienen de transacciones de criptomonedas registradas en la blockchain, recopiladas y almacenadas en formato CSV.
+- ** Método de adquisición** Los datos fueron adquiridos mediante APIs públicas de blockchain. Posteriormente, se procesaron y almacenaron en el bucket horizontal-time-442413-m5
 - **Formato**: CSV con las siguientes columnas:
    - `block_number`: Número del bloque.
    - `transaction_hash`: Hash único de la transacción.
    - `from_address` y `to_address`: Dirección de origen y destino.
    - `value`: Valor de la transacción.
    - `block_timestamp`: Marca temporal de la transacción.
+   - Los datos están almacenados en formato CSV (Comma-Separated Values), con encabezados en la primera fila.
 
-- **Tamaño**: 1 GB+  /// 
+- **Tamaño**: 1,3 GB  /// 6,8 millones de filas
 
 ---
 
@@ -101,6 +103,15 @@ El tiempo de procesamiento se evaluó con diferentes configuraciones de clúster
 | 2               | 15 minutos          |
 | 4               | 9 minutos           |
 
+Cálculo eficiente de cuantiles y estadísticas:
+Se utilizó la función approxQuantile() de Spark en lugar de cálculos exactos, acelerando la obtención de percentiles críticos para detectar anomalías.
+Composición de archivos grandes:
+Al combinar archivos con gsutil compose, se redujo la necesidad de manejar múltiples partes pequeñas, facilitando el análisis posterior.
+Efecto de las Optimizaciones:
+
+El tiempo de procesamiento total se redujo significativamente, especialmente en las etapas de cálculo de anomalías y generación de estadísticas básicas.
+La visualización se hizo más eficiente al trabajar con muestras de datos agregadas y distribuciones resumidas.
+El almacenamiento optimizado en Parquet permitió consultas más rápidas en futuras iteraciones de análisis.
 ---
 
 ## 8. Características Avanzadas <a name="caracteristicas-avanzadas"></a>
